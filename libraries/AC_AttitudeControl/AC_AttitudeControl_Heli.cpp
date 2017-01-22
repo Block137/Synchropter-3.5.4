@@ -150,6 +150,13 @@ const AP_Param::GroupInfo AC_AttitudeControl_Heli::var_info[] = {
     // @Increment: 1
     AP_SUBGROUPINFO(_pid_rate_yaw, "RAT_YAW_", 4, AC_AttitudeControl_Heli, AC_HELI_PID),
 
+    // @Param: I_LEAK_RATE
+    // @DisplayName: I LEAK RATE
+    // @Description: Rate at which I term will leak for PID
+    // @Range: 0 1
+    // @User: Advanced
+    AP_GROUPINFO("I_LEAK_RATE",    5, AC_AttitudeControl_Heli, _rate_integrator_leak_rate, AC_ATTITUDE_HELI_RATE_INTEGRATOR_LEAK_RATE),
+
     AP_GROUPEND
 };
 
@@ -308,7 +315,7 @@ void AC_AttitudeControl_Heli::rate_bf_to_motor_roll_pitch(const Vector3f &rate_r
     // update i term as long as we haven't breached the limits or the I term will certainly reduce
     if (!_flags_heli.limit_roll || ((roll_i>0&&rate_roll_error_rads<0)||(roll_i<0&&rate_roll_error_rads>0))){
 		if (_flags_heli.leaky_i){
-			roll_i = _pid_rate_roll.get_leaky_i(AC_ATTITUDE_HELI_RATE_INTEGRATOR_LEAK_RATE);
+			roll_i = _pid_rate_roll.get_leaky_i(_rate_integrator_leak_rate);
 		}else{
 			roll_i = _pid_rate_roll.get_i();
 		}
@@ -320,7 +327,7 @@ void AC_AttitudeControl_Heli::rate_bf_to_motor_roll_pitch(const Vector3f &rate_r
     // update i term as long as we haven't breached the limits or the I term will certainly reduce
     if (!_flags_heli.limit_pitch || ((pitch_i>0&&rate_pitch_error_rads<0)||(pitch_i<0&&rate_pitch_error_rads>0))){
 		if (_flags_heli.leaky_i) {
-			pitch_i = _pid_rate_pitch.get_leaky_i(AC_ATTITUDE_HELI_RATE_INTEGRATOR_LEAK_RATE);
+			pitch_i = _pid_rate_pitch.get_leaky_i(_rate_integrator_leak_rate);
 		}else{
 			pitch_i = _pid_rate_pitch.get_i();
 		}
@@ -402,7 +409,7 @@ float AC_AttitudeControl_Heli::rate_target_to_motor_yaw(float rate_yaw_actual_ra
         if (((AP_MotorsHeli&)_motors).rotor_runup_complete()) {
             i = _pid_rate_yaw.get_i();
         } else {
-            i = ((AC_HELI_PID&)_pid_rate_yaw).get_leaky_i(AC_ATTITUDE_HELI_RATE_INTEGRATOR_LEAK_RATE);    // If motor is not running use leaky I-term to avoid excessive build-up
+            i = ((AC_HELI_PID&)_pid_rate_yaw).get_leaky_i(_rate_integrator_leak_rate);    // If motor is not running use leaky I-term to avoid excessive build-up
         }
     }
     

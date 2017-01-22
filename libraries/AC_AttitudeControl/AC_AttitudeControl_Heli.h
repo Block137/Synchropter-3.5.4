@@ -136,7 +136,6 @@ private:
     // internal variables
     float _hover_roll_trim_scalar = 0;              // scalar used to suppress Hover Roll Trim
 
-
     // This represents an euler axis-angle rotation vector from the vehicles
     // estimated attitude to the reference (setpoint) attitude used in the attitude
     // controller, in radians in the vehicle body frame of reference.
@@ -148,6 +147,7 @@ private:
     AC_HELI_PID     _pid_rate_roll;
     AC_HELI_PID     _pid_rate_pitch;
     AC_HELI_PID     _pid_rate_yaw;
+    AP_Float        _rate_integrator_leak_rate;
     
     // LPF filters to act on Rate Feedforward terms to linearize output.
     // Due to complicated aerodynamic effects, feedforwards acting too fast can lead
