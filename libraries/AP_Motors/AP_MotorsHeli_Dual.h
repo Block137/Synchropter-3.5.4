@@ -135,6 +135,8 @@ protected:
     AP_Float        _dcp_scaler;                    // scaling factor applied to the differential-collective-pitch
     AP_Float        _dcp_yaw_effect;                // feed-forward compensation to automatically add yaw input when differential collective pitch is applied.
     AP_Float        _yaw_scaler;                    // scaling factor applied to the yaw mixing
+	AP_Int16        _yaw_revp;                      // Rate of yaw reduction near zero collective
+	AP_Float        _yaw_mode;                      // yaw method
 
     SRV_Channel    *_swash_servo_1;
     SRV_Channel    *_swash_servo_2;
